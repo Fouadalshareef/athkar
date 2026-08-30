@@ -9,6 +9,7 @@ import { vibrate } from '../../services/haptics'
 import { emitGoldBurst } from './ParticleBurst'
 import { Events } from '../events'
 import { getSpeed } from '../../services/SettingsService'
+import { getDhikrArtTexture, getDhikrArtScale } from './DhikrArt'
 
 /** معامل تكبير الأجسام العائمة — 2.0 يعطي حجماً مريحاً للمس دون طغيان على الشاشة. */
 const BODY_SCALE = 2.0
@@ -40,6 +41,8 @@ export abstract class FloatingObject extends Phaser.GameObjects.Container {
   private readonly startX: number
   private phase: number
   private popped = false
+  /** هل يستخدم هذا الجسم الرسم الفني المستخرج بدل الرسم الإجرائي؟ */
+  private usesArt = false
     /** هل الجسم ما يزال في مرحلة الاندفاع الأولي السريع بعد الظهور؟ */
   private burst = true
   private comboGlow: Phaser.GameObjects.Graphics | null = null
@@ -61,8 +64,19 @@ export abstract class FloatingObject extends Phaser.GameObjects.Container {
     this.setData('dhikrId', options.dhikrId)
     this.setData('dhikrName', options.dhikrName)
 
-    // رسم الشكل الخاص بكل نوع
-    this.buildBody()
+    // الرسم الفني المستخرج (إن وُجد) يُستخدم بدل الجسم الإجرائي ونص الذكر،
+    // لأن الرسم يحتوي نص الذكر مضمناً فيه أصلاً.
+    const artKey = getDhikrArtTexture(scene, options.dhikrId)
+    this.usesArt = artKey !== null
+
+    if (artKey) {
+      const art = scene.add.image(0, 0, artKey)
+      art.setScale(getDhikrArtScale(scene, artKey, options.hitRadius))
+      this.add(art)
+    } else {
+      // رسم الشكل الخاص بكل نوع (fallback إجرائي)
+      this.buildBody()
+    }
     this.buildComboVisual()
 
     // إضاءة Glow ناعمة خلف الجسم لإبرازه في الشاشة
@@ -76,19 +90,22 @@ export abstract class FloatingObject extends Phaser.GameObjects.Container {
     }
 
     // نص الذكر في منتصف الجسم — خط عربي رشيق مع ظل ناعم
-    const label = scene.add
-      .text(0, 0, options.dhikrName, {
-        fontFamily: '"Amiri", "Scheherazade New", "Segoe UI", Tahoma, sans-serif',
-        fontSize: '19px',
-        fontStyle: 'bold',
-        color: '#ffffff',
-        align: 'center',
-        wordWrap: { width: 115, useAdvancedWrap: true },
-      })
-      .setOrigin(0.5, 0.5)
-    label.setShadow(0, 1, 'rgba(0,0,0,0.7)', 4, true, true)
-    label.setStroke('#0a0f1e', 2)
-    this.add(label)
+    // (يُتخطى عند استخدام الرسم الفني لأن النص مضمن في الرسم)
+    if (!this.usesArt) {
+      const label = scene.add
+        .text(0, 0, options.dhikrName, {
+          fontFamily: '"Amiri", "Scheherazade New", "Segoe UI", Tahoma, sans-serif',
+          fontSize: '19px',
+          fontStyle: 'bold',
+          color: '#ffffff',
+          align: 'center',
+          wordWrap: { width: 115, useAdvancedWrap: true },
+        })
+        .setOrigin(0.5, 0.5)
+      label.setShadow(0, 1, 'rgba(0,0,0,0.7)', 4, true, true)
+      label.setStroke('#0a0f1e', 2)
+      this.add(label)
+    }
 
     // منطقة لمس دائرية مركزة 100% على مركز المجسم:
     // الإحداثيات المحلية للدائرة تُضرب في scale (2.6) عند تحويل Phaser لها لإحداثيات دولية،
@@ -166,13 +183,15 @@ export abstract class FloatingObject extends Phaser.GameObjects.Container {
     // إضافة الـ glow كأول طبقة (أسفل الجميع داخل الـ Container)
     this.addAt(glow, 0)
 
-    // حلقة بيضاء رفيعة أنيقة حول حافة الجسم
-    const outline = this.scene.add.graphics()
-    outline.lineStyle(3, 0xffffff, 0.88)
-    outline.strokeCircle(0, 0, hitRadius * 1.0)
-    outline.lineStyle(1, 0xffffff, 0.35)
-    outline.strokeCircle(0, 0, hitRadius * 1.1)
-    this.addAt(outline, 1)
+    // حلقة بيضاء رفيعة أنيقة حول حافة الجسم (للرسم الإجرائي فقط)
+    if (!this.usesArt) {
+      const outline = this.scene.add.graphics()
+      outline.lineStyle(3, 0xffffff, 0.88)
+      outline.strokeCircle(0, 0, hitRadius * 1.0)
+      outline.lineStyle(1, 0xffffff, 0.35)
+      outline.strokeCircle(0, 0, hitRadius * 1.1)
+      this.addAt(outline, 1)
+    }
 
     // نبض خفيف ناعم للهالة
     this.scene.tweens.add({

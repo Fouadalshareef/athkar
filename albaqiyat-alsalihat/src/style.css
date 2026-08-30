@@ -69,3 +69,14 @@ body {
 body.modal-open {
   touch-action: pan-y !important;
 }
+
+/* مناطق الأمان على الجوال (النوتش / أشرطة النظام):
+   طبقات HTML الممتدة على كامل الشاشة تحترم env(safe-area-inset-*)
+   مع حد أدنى 16px كي لا تتضخم الحشوة على المتصفح المكتبي */
+#dashboard-modal,
+#garden-modal,
+#advice-modal,
+#quran-modal {
+  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right))
+    max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+}

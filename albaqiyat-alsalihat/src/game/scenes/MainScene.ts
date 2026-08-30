@@ -233,24 +233,28 @@ export default class MainScene extends Phaser.Scene {
     btn.setDepth(2000)
     const r = 32 // زجاجي دائري أنيق 64px
 
+    // درجة داكنة من لون الزر للحافة السفلية (عمق ثلاثي الأبعاد كما في المرجع)
+    const dark = Phaser.Display.Color.ValueToColor(color).darken(38).color
+
     const bg = this.add.graphics()
     // ظل ناعم تحت الزر
-    bg.fillStyle(0x020617, 0.38)
-    bg.fillCircle(2, 5, r + 3)
-    // جسم زجاجي شفاف (Glassmorphism)
-    bg.fillStyle(color, 0.30)
+    bg.fillStyle(0x020617, 0.4)
+    bg.fillCircle(2, 6, r + 3)
+    // حافة سفلية داكنة (عمق)
+    bg.fillStyle(dark, 1)
+    bg.fillCircle(0, 3, r)
+    // جسم الزر بلون مشبع
+    bg.fillStyle(color, 0.96)
     bg.fillCircle(0, 0, r)
-    bg.fillStyle(0xffffff, 0.07)
-    bg.fillCircle(0, 0, r)
-    // حد زجاجي فاتح
-    bg.lineStyle(2, colorHi, 0.85)
+    // حلقة خارجية ذهبية رفيعة (لغة المرجع البصرية)
+    bg.lineStyle(2.5, 0xffd166, 0.9)
     bg.strokeCircle(0, 0, r)
-    // لمعة علوية زجاجية
-    bg.fillStyle(0xffffff, 0.18)
-    bg.fillEllipse(0, -r * 0.38, r * 1.3, r * 0.5)
-    // حلقة داخلية رفيعة
-    bg.lineStyle(1, 0xffffff, 0.3)
+    // حلقة بيضاء داخلية
+    bg.lineStyle(1.5, 0xffffff, 0.45)
     bg.strokeCircle(0, 0, r - 5)
+    // لمعة علوية
+    bg.fillStyle(0xffffff, 0.28)
+    bg.fillEllipse(0, -r * 0.42, r * 1.25, r * 0.45)
 
     // الأيقونة مرسومة برمجياً (Vector)
     const iconG = this.add.graphics()
@@ -394,27 +398,31 @@ export default class MainScene extends Phaser.Scene {
   /** عداد الجلسة الحالية أسفل زر الإيقاف — مُدمج وأنيق مع إطار ذهبي رفيع. */
   private buildSessionCounter(): void {
     const x = this.scale.width - 56
-    // إطار خلفية داكن (Pill) مضغوط
+    // لوحة عداد بإطار ذهبي مزدوج — مطابقة للغة المرجع (لوحات "أفضل تتابع")
     const bg = this.add.graphics()
-    bg.fillStyle(0x0f172a, 0.68)
-    bg.fillRoundedRect(x - 42, 110, 84, 90, 14)
-    bg.lineStyle(1.5, 0xffd166, 0.5)
-    bg.strokeRoundedRect(x - 42, 110, 84, 90, 14)
+    bg.fillStyle(0x020617, 0.45) // ظل
+    bg.fillRoundedRect(x - 44, 114, 88, 92, 18)
+    bg.fillStyle(0x0b1a33, 0.88) // جسم كحلي داكن
+    bg.fillRoundedRect(x - 42, 110, 84, 90, 16)
+    bg.lineStyle(2.5, 0xffd166, 0.95) // إطار ذهبي
+    bg.strokeRoundedRect(x - 42, 110, 84, 90, 16)
+    bg.lineStyle(1, 0xfff3c4, 0.4) // إطار داخلي فاتح
+    bg.strokeRoundedRect(x - 37, 115, 74, 80, 12)
     bg.setDepth(1999)
 
     this.add
-      .text(x, 127, 'الجلسة', {
+      .text(x, 130, 'الجلسة', {
         fontFamily: '"Amiri", "Segoe UI", Tahoma, sans-serif',
         fontSize: '16px',
         fontStyle: 'bold',
-        color: '#cbd5e1',
+        color: '#fde68a',
       })
       .setOrigin(0.5)
       .setDepth(2000)
       .setShadow(0, 1, 'rgba(0,0,0,0.6)', 3, true, true)
 
     this.sessionText = this.add
-      .text(x, 170, '0', {
+      .text(x, 172, '0', {
         fontFamily: 'Consolas, monospace',
         fontSize: '42px',
         fontStyle: 'bold',

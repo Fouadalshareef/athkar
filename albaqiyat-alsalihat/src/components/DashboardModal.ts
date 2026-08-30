@@ -72,9 +72,9 @@ function renderContent(): string {
 
   const statRows = DHIKR_LABELS.map(
     ({ id, label }) => `
-      <div class="flex items-center justify-between rounded-lg bg-slate-800/70 px-4 py-3">
+      <div class="flex items-center justify-between rounded-lg border border-amber-300/20 bg-slate-800/70 px-4 py-3">
         <span class="text-xl text-slate-100">${label}</span>
-        <span class="font-mono text-xl font-bold text-emerald-300">${stats[id] ?? 0}</span>
+        <span class="font-mono text-xl font-bold text-amber-300">${stats[id] ?? 0}</span>
       </div>`,
   ).join('')
 
@@ -249,14 +249,14 @@ export function initDashboard(): void {
   modal.className = 'fixed inset-0 z-[60] hidden items-start justify-center p-4'
   modal.innerHTML = `
     <div id="dash-backdrop" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-    <div id="dash-scroll" class="relative w-[90%] max-w-[420px] max-h-[85vh] overflow-y-auto rounded-2xl border border-emerald-400/40 bg-slate-900/95 p-6 shadow-2xl space-y-6">
+    <div id="dash-scroll" class="relative w-[90%] max-w-[420px] max-h-[85vh] overflow-y-auto rounded-2xl border-2 border-amber-300/60 bg-[#0b1a33]/95 p-6 shadow-[0_18px_50px_rgba(0,0,0,0.55)] space-y-6">
       <div class="flex items-center justify-between">
-        <h2 class="flex items-center gap-2 text-xl font-bold text-emerald-100">
-          <span class="inline-flex w-6 h-6 text-emerald-300">${Settings}</span>
+        <h2 class="flex items-center gap-2 text-xl font-bold text-amber-100">
+          <span class="inline-flex w-6 h-6 text-amber-300">${Settings}</span>
           لوحة التحكم
         </h2>
         <button id="dash-close" type="button"
-          class="inline-flex w-8 h-8 items-center justify-center rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors cursor-pointer">
+          class="inline-flex w-8 h-8 items-center justify-center rounded-full bg-slate-800 border border-amber-300/40 hover:bg-slate-700 text-amber-100 transition-colors cursor-pointer">
           <span class="inline-flex w-4 h-4">${X}</span>
         </button>
       </div>

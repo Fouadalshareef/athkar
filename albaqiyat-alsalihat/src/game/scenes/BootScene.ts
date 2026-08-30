@@ -10,11 +10,14 @@ export default class BootScene extends Phaser.Scene {
   }
 
   preload(): void {
-    // كسر الكاش الجذري للأصول (Preload Asset Busting):
-    // إضافة Cache Key ديناميكي (رقم الإصدار أو Timestamp) يمنع قراءة الأصول القديمة
-    // ملاحظة: الأجسام الحالية تُرسَم برمجياً (Graphics)، ولكن لأي أصول إضافية كالصور أو الأيقونات تُكتب هكذا:
-    // this.load.image('cloud', `assets/cloud.png?v=1.0.1&t=${Date.now()}`);
-    // this.load.svg('icon', `assets/icon.svg?v=1.0.1`);
+    // رسوم الأذكار المستخرجة (فردي لكل ذكر) — يستخدمها FloatingObject بدل الرسم الإجرائي عند توفرها.
+    this.load.image('dhikr-art-subhanallah', 'assets/game/bubbles/dhikr-subhanallah.png')
+    this.load.image('dhikr-art-alhamdulillah', 'assets/game/bubbles/dhikr-alhamdulillah.png')
+    this.load.image('dhikr-art-allahu-akbar', 'assets/game/bubbles/dhikr-allahu-akbar.png')
+    this.load.image('dhikr-art-la-ilaha-illa-allah', 'assets/game/bubbles/dhikr-la-ilaha-illa-allah.png')
+    this.load.image('dhikr-art-la-hawla', 'assets/game/bubbles/dhikr-la-hawla.png')
+    this.load.image('dhikr-art-subhanallah-wa-bihamdih', 'assets/game/bubbles/dhikr-subhanallah-wa-bihamdih.png')
+    this.load.image('dhikr-art-salawat', 'assets/game/bubbles/dhikr-salawat.png')
   }
 
   create(): void {
