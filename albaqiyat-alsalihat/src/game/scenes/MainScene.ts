@@ -77,7 +77,7 @@ export default class MainScene extends Phaser.Scene {
   private modeUIOpen = false
 
   private sessionText!: Phaser.GameObjects.Text
-  private pauseIconG!: Phaser.GameObjects.Graphics
+  private pauseIconG!: Phaser.GameObjects.Image
   private updateBadge!: Phaser.GameObjects.Container
   private modePanel!: Phaser.GameObjects.Container
   private focusPanel!: Phaser.GameObjects.Container
@@ -143,21 +143,27 @@ export default class MainScene extends Phaser.Scene {
   // ------------------------------------------------------------------
 
   private buildHud(): void {
-    // أقصى اليسار العلوي: الإعدادات، الأنماط، ثم الحديقة
-    this.buildSideButton(56, 62, 'gear', 0x0ea5e9, () => {
+    // تخطيط مرتبط بحجم الشاشة: هوامش ومسافات نسبية مع حدود دنيا آمنة
+    const { width, height } = this.scale
+    const marginX = Math.round(Math.max(46, Math.min(64, width * 0.14)))
+    const topY = Math.round(Math.max(62, height * 0.072))
+    const gap = Math.round(Math.max(70, Math.min(88, height * 0.1)))
+
+    // عائلة أزرار موحّدة: جسم كحلي + إطار ذهبي + أيقونة كريمية (نفس التصميم للجميع)
+    this.buildSideButton(marginX, topY, 'gear', () => {
       window.dispatchEvent(new CustomEvent('open-dashboard'))
     })
-    this.buildSideButton(56, 142, 'sliders', 0x8b5cf6, () => this.openModePanel())
-    this.buildSideButton(56, 222, 'leaf', 0x10b981, () => {
+    this.buildSideButton(marginX, topY + gap, 'sliders', () => this.openModePanel())
+    this.buildSideButton(marginX, topY + gap * 2, 'leaf', () => {
       window.dispatchEvent(new CustomEvent('open-garden'))
     })
-    this.buildSideButton(56, 302, 'quran', 0x92400e, () => {
+    this.buildSideButton(marginX, topY + gap * 3, 'quran', () => {
       window.dispatchEvent(new CustomEvent('open-quran'))
     })
 
-    // أقصى اليمين العلوي: إيقاف مؤقت + عداد الجلسة
-    this.buildPauseButton()
-    this.buildSessionCounter()
+    // أقصى اليمين العلوي: إيقاف مؤقت + عداد الجلسة (بنفس الإيقاع النسبي)
+    this.buildPauseButton(topY)
+    this.buildSessionCounter(topY)
     this.buildComboCounter()
   }
 
@@ -249,17 +255,18 @@ export default class MainScene extends Phaser.Scene {
     // حلقة خارجية ذهبية رفيعة (لغة المرجع البصرية)
     bg.lineStyle(2.5, 0xffd166, 0.9)
     bg.strokeCircle(0, 0, r)
-    // حلقة بيضاء داخلية
-    bg.lineStyle(1.5, 0xffffff, 0.45)
+    // حلقة بيضاء داخلية (لمسة كريمية من colorHi)
+    bg.lineStyle(1.5, colorHi, 0.4)
     bg.strokeCircle(0, 0, r - 5)
     // لمعة علوية
     bg.fillStyle(0xffffff, 0.28)
     bg.fillEllipse(0, -r * 0.42, r * 1.25, r * 0.45)
 
-    // الأيقونة مرسومة برمجياً (Vector)
-    const iconG = this.add.graphics()
-    this.drawIcon(iconG, icon, colorHi)
-    btn.add([bg, iconG])
+    // الأيقونة: أصل PNG كريمي موحّد (واضح حتى على الشاشات الصغيرة)
+    const iconImg = this.add.image(0, 0, `icon-${icon}`)
+    const iconScale = (r * 1.05) / 64 // الأصل 128px → نصف قطره البصري ~64
+    iconImg.setScale(iconScale)
+    btn.add([bg, iconImg])
     btn.setSize(r * 2 + 12, r * 2 + 12)
     // دائرة ضغط مركزية موسّعة
     btn.setInteractive(new Phaser.Geom.Circle(0, 0, r + 16), Phaser.Geom.Circle.Contains)
@@ -277,100 +284,22 @@ export default class MainScene extends Phaser.Scene {
     return btn
   }
 
-  /** رسم أيقونة Vector (تروس / sliders / إيقاف / تشغيل / leaf) — مُكيّفة لزر 64px. */
-  private drawIcon(g: Phaser.GameObjects.Graphics, kind: 'gear' | 'sliders' | 'pause' | 'play' | 'leaf' | 'quran', tint: number): void {
-    g.clear()
-    const c = 0xffffff
-    if (kind === 'gear') {
-      // تروس: 8 أسنان حول حلقة — مُصغَّرة بنسبة 0.8×
-      for (let i = 0; i < 8; i++) {
-        const a = (Math.PI * 2 * i) / 8
-        g.save()
-        g.translateCanvas(Math.cos(a) * 21, Math.sin(a) * 21)
-        g.rotateCanvas(a + Math.PI / 2)
-        g.fillStyle(c, 1)
-        g.fillRoundedRect(-4, -6, 8, 11, 2)
-        g.restore()
-      }
-      g.lineStyle(7, c, 1)
-      g.strokeCircle(0, 0, 15)
-    } else if (kind === 'sliders') {
-      // sliders: ثلاثة خطوط مع مقابض — مُصغَّرة
-      g.lineStyle(5, c, 1)
-      g.lineBetween(-17, -13, 17, -13)
-      g.lineBetween(-17, 0, 17, 0)
-      g.lineBetween(-17, 13, 17, 13)
-      g.fillStyle(c, 1)
-      g.fillCircle(-5, -13, 6.5)
-      g.fillCircle(8, 0, 6.5)
-      g.fillCircle(-10, 13, 6.5)
-      g.fillStyle(tint, 1)
-      g.fillCircle(-5, -13, 2.8)
-      g.fillCircle(8, 0, 2.8)
-      g.fillCircle(-10, 13, 2.8)
-    } else if (kind === 'pause') {
-      // pause: مستطيلان مستديران أصغر
-      g.fillStyle(c, 1)
-      g.fillRoundedRect(-12, -15, 9, 30, 3)
-      g.fillRoundedRect(3, -15, 9, 30, 3)
-    } else if (kind === 'play') {
-      // play: مثلث ناعم أصغر
-      g.fillStyle(c, 1)
-      g.fillPoints(
-        [
-          { x: -9, y: -15 },
-          { x: -9, y: 15 },
-          { x: 14, y: 0 },
-        ],
-        true,
-      )
-    } else if (kind === 'leaf') {
-      // leaf: شكل ورقة شجر مبسط
-      g.fillStyle(c, 1)
-      g.beginPath()
-      g.moveTo(0, 14)
-      g.lineTo(-12, 2)
-      g.lineTo(-6, -14)
-      g.lineTo(0, -18)
-      g.lineTo(6, -14)
-      g.lineTo(12, 2)
-      g.closePath()
-      g.fill()
-      g.lineStyle(2, tint, 1)
-      g.lineBetween(0, 14, 0, -8)
-    } else if (kind === 'quran') {
-      // quran: كتاب مفتوح بسيط
-      g.fillStyle(c, 1)
-      g.fillRoundedRect(-20, -15, 18, 30, 3)
-      g.fillRoundedRect(2, -15, 18, 30, 3)
-      g.lineStyle(3, tint, 1)
-      g.lineBetween(0, -14, 0, 15)
-      g.lineStyle(2, tint, 0.8)
-      g.lineBetween(-15, -7, -5, -7)
-      g.lineBetween(5, -7, 15, -7)
-      g.lineBetween(-15, 1, -5, 1)
-      g.lineBetween(5, 1, 15, 1)
-    }
-  }
-
-  /** أقصى اليسار العلوي: الإعدادات فوق الأنماط. */
+  /** أقصى اليسار العلوي: كل الأزرار من نفس العائلة البصرية (كحلي + ذهبي). */
   private buildSideButton(
     x: number,
     y: number,
     icon: 'gear' | 'sliders' | 'leaf' | 'quran',
-    color: number,
     onTap: () => void,
   ): void {
-    const hi = color === 0x0ea5e9 ? 0x7dd3fc : color === 0x10b981 ? 0x6ee7b7 : color === 0x92400e ? 0xfde68a : 0xc4b5fd
-    this.buildRoundButton(x, y, icon, color, hi, onTap)
+    this.buildRoundButton(x, y, icon, 0x14295c, 0xfff6e0, onTap)
   }
 
-  /** زر إيقاف/استئناف مؤقت أعلى اليمين (أيقونة Vector قابلة لإعادة الرسم). */
-  private buildPauseButton(): void {
-    const x = this.scale.width - 56
-    const btn = this.buildRoundButton(x, 62, 'pause', 0x334155, 0x94a3b8, () => this.togglePause())
-    // المؤشر الثاني في الحاوية هو رسم الأيقونة — يُعاد رسمه عند التبديل
-    this.pauseIconG = btn.list[1] as Phaser.GameObjects.Graphics
+  /** زر إيقاف/استئناف مؤقت أعلى اليمين (أيقونة PNG ضمن نفس العائلة). */
+  private buildPauseButton(topY: number): void {
+    const x = this.scale.width - Math.round(Math.max(46, Math.min(64, this.scale.width * 0.14)))
+    const btn = this.buildRoundButton(x, topY, 'pause', 0x14295c, 0xfff6e0, () => this.togglePause())
+    // العنصر الثاني في الحاوية هو صورة الأيقونة — يُبدَّل نسيجها عند التبديل
+    this.pauseIconG = btn.list[1] as Phaser.GameObjects.Image
   }
 
   /** عداد الجلسة الحالية أسفل زر الإيقاف — مُدمج وأنيق مع إطار ذهبي رفيع. */
@@ -395,23 +324,27 @@ export default class MainScene extends Phaser.Scene {
     this.tweens.add({ targets: this.comboText, scale: { from: 1.2, to: 1 }, duration: 220, ease: 'Back.easeOut' })
   }
 
-  /** عداد الجلسة الحالية أسفل زر الإيقاف — مُدمج وأنيق مع إطار ذهبي رفيع. */
-  private buildSessionCounter(): void {
-    const x = this.scale.width - 56
+  /** عداد الجلسة الحالية أسفل زر الإيقاف — لوحة ذهبية مميزة بموضع نسبي للشاشة. */
+  private buildSessionCounter(topY: number): void {
+    const x = this.scale.width - Math.round(Math.max(46, Math.min(64, this.scale.width * 0.14)))
+    const cy = topY + 56 // أسفل زر الإيقاف مباشرة
     // لوحة عداد بإطار ذهبي مزدوج — مطابقة للغة المرجع (لوحات "أفضل تتابع")
     const bg = this.add.graphics()
     bg.fillStyle(0x020617, 0.45) // ظل
-    bg.fillRoundedRect(x - 44, 114, 88, 92, 18)
+    bg.fillRoundedRect(x - 44, cy + 4, 88, 92, 18)
     bg.fillStyle(0x0b1a33, 0.88) // جسم كحلي داكن
-    bg.fillRoundedRect(x - 42, 110, 84, 90, 16)
+    bg.fillRoundedRect(x - 42, cy, 84, 90, 16)
     bg.lineStyle(2.5, 0xffd166, 0.95) // إطار ذهبي
-    bg.strokeRoundedRect(x - 42, 110, 84, 90, 16)
+    bg.strokeRoundedRect(x - 42, cy, 84, 90, 16)
     bg.lineStyle(1, 0xfff3c4, 0.4) // إطار داخلي فاتح
-    bg.strokeRoundedRect(x - 37, 115, 74, 80, 12)
+    bg.strokeRoundedRect(x - 37, cy + 5, 74, 80, 12)
+    // توهج ذهبي علوي خفيف داخل اللوحة
+    bg.fillStyle(0xffd166, 0.08)
+    bg.fillRoundedRect(x - 42, cy, 84, 22, { tl: 16, tr: 16, bl: 0, br: 0 })
     bg.setDepth(1999)
 
     this.add
-      .text(x, 130, 'الجلسة', {
+      .text(x, cy + 20, 'الجلسة', {
         fontFamily: '"Amiri", "Segoe UI", Tahoma, sans-serif',
         fontSize: '16px',
         fontStyle: 'bold',
@@ -422,7 +355,7 @@ export default class MainScene extends Phaser.Scene {
       .setShadow(0, 1, 'rgba(0,0,0,0.6)', 3, true, true)
 
     this.sessionText = this.add
-      .text(x, 172, '0', {
+      .text(x, cy + 62, '0', {
         fontFamily: 'Consolas, monospace',
         fontSize: '42px',
         fontStyle: 'bold',
@@ -446,7 +379,7 @@ export default class MainScene extends Phaser.Scene {
   private togglePause(): void {
     this.paused = !this.paused
     this.data.set('paused', this.paused)
-    this.drawIcon(this.pauseIconG, this.paused ? 'play' : 'pause', 0x94a3b8)
+    this.pauseIconG.setTexture(this.paused ? 'icon-play' : 'icon-pause')
   }
 
   // ------------------------------------------------------------------

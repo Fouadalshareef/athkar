@@ -1,5 +1,5 @@
-/**
- * Gem — جوهرة بلورية ماسية (Diamond Violet) لذكر: "لَا إِلَٰهَ إِلَّا الله".
+﻿/**
+ * Gem â€” ط¬ظˆظ‡ط±ط© ط¨ظ„ظˆط±ظٹط© ظ…ط§ط³ظٹط© (Diamond Violet) ظ„ط°ظƒط±: "ظ„ظژط§ ط¥ظگظ„ظژظ°ظ‡ظژ ط¥ظگظ„ظژظ‘ط§ ط§ظ„ظ„ظ‡".
  */
 import Phaser from 'phaser'
 import { FloatingObject, type FloatingObjectOptions } from './FloatingObject'
@@ -8,7 +8,7 @@ export default class Gem extends FloatingObject {
   constructor(scene: Phaser.Scene, x: number, y: number, override?: Partial<FloatingObjectOptions>) {
     super(scene, x, y, {
       dhikrId: 'la-ilaha-illa-allah',
-      dhikrName: 'لَا إِلَٰهَ إِلَّا الله',
+      dhikrName: 'ظ„ظژط§ ط¥ظگظ„ظژظ°ظ‡ظژ ط¥ظگظ„ظژظ‘ط§ ط§ظ„ظ„ظ‡',
       dhikrTarget: 100,
       speedBase: 68,
       speedMultiplier: 1,
@@ -21,13 +21,13 @@ export default class Gem extends FloatingObject {
   }
 
   protected getGlowColor(): number {
-    return 0xbf5cff // بنفسجي فسفوري متوهج للجوهرة
+    return 0xc4b5fd // ط¨ظ†ظپط³ط¬ظٹ ظپط³ظپظˆط±ظٹ ظ…طھظˆظ‡ط¬ ظ„ظ„ط¬ظˆظ‡ط±ط©
   }
 
   protected buildBody(): void {
     const g = this.scene.add.graphics()
 
-    // هالة بنفسجية ناعمة
+    // ظ‡ط§ظ„ط© ط¨ظ†ظپط³ط¬ظٹط© ظ†ط§ط¹ظ…ط©
     g.fillStyle(0x8b5cf6, 0.16)
     g.fillCircle(0, 0, 44)
 
@@ -50,17 +50,17 @@ export default class Gem extends FloatingObject {
       { x: -26, y: 0 },
     ]
 
-    // النصف العلوي أفتح، والنصف السفلي أغمق (إحساس بصري)
+    // ط§ظ„ظ†طµظپ ط§ظ„ط¹ظ„ظˆظٹ ط£ظپطھط­طŒ ظˆط§ظ„ظ†طµظپ ط§ظ„ط³ظپظ„ظٹ ط£ط؛ظ…ظ‚ (ط¥ط­ط³ط§ط³ ط¨طµط±ظٹ)
     g.fillStyle(0x8b5cf6, 1)
     g.fillPoints(top, true)
     g.fillStyle(0x7c3aed, 1)
     g.fillPoints(bottom, true)
 
-    // حد خارجي مضيء سميك (4px) أبيض ناصع
+    // ط­ط¯ ط®ط§ط±ط¬ظٹ ظ…ط¶ظٹط، ط³ظ…ظٹظƒ (4px) ط£ط¨ظٹط¶ ظ†ط§طµط¹
     g.lineStyle(4, 0xffffff, 1)
     g.strokePoints(outline, true)
 
-    // خطوط الأوجه
+    // ط®ط·ظˆط· ط§ظ„ط£ظˆط¬ظ‡
     g.lineStyle(1.5, 0xc4b5fd, 0.9)
     g.lineBetween(-26, 0, 0, -14)
     g.lineBetween(26, 0, 0, -14)

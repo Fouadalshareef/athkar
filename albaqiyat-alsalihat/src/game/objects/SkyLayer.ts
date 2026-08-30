@@ -47,7 +47,7 @@ export default class SkyLayer extends Phaser.GameObjects.Container {
 
     // 2) نجوم تتلألأ
     if (this.theme.stars) {
-      for (let i = 0; i < 90; i++) {
+      for (let i = 0; i < 48; i++) {
         const x = Phaser.Math.Between(0, width)
         const y = Phaser.Math.Between(0, height * 0.7)
         const alpha = Phaser.Math.FloatBetween(0.2, 1) * this.theme.starAlpha
@@ -66,7 +66,40 @@ export default class SkyLayer extends Phaser.GameObjects.Container {
       }
     }
 
-    // 3) السحب فقط (أُزيلت الشمس والقمر نهائياً — سماء نظيفة هادئة)
+    // 3) القمر (أصل PNG) في الفترات الليلية — عنصر رئيسي هادئ مع توهّج ambient خفيف
+    if (this.theme.stars) {
+      const moon = this.scene.add
+        .image(width * 0.78, height * 0.14, 'env-moon')
+        .setScale(Math.min(1.15, Math.max(0.7, width / 390)))
+        .setAlpha(0.95)
+      this.scene.tweens.add({
+        targets: moon,
+        alpha: { from: 0.85, to: 1 },
+        duration: 4200,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut',
+      })
+      this.add(moon)
+
+      // فانوس دافئ منخفض على الحافة — إضاءة محيطة خفيفة لا تنافس الذكر
+      const lantern = this.scene.add
+        .image(width * 0.1, height * 0.66, 'env-lantern')
+        .setScale(Math.min(0.85, Math.max(0.5, width / 520)))
+        .setAlpha(0.85)
+      this.scene.tweens.add({
+        targets: lantern,
+        alpha: { from: 0.7, to: 0.95 },
+        scale: lantern.scale,
+        duration: 3200,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut',
+      })
+      this.add(lantern)
+    }
+
+    // 4) السحب فقط (أُزيلت الشمس — سماء نظيفة هادئة)
     if (this.theme.clouds) {
       this.buildCloud(width, height)
     }

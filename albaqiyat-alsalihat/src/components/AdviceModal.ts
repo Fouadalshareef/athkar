@@ -8,7 +8,7 @@ export function initAdviceModal(): void {
   modal.className = 'fixed inset-0 z-[70] hidden items-center justify-center p-4 touch-pan-y'
   modal.innerHTML = `
     <div id="advice-backdrop" class="absolute inset-0 bg-black/80 backdrop-blur-md"></div>
-    <div id="advice-scroll" class="relative w-[95%] max-w-[480px] max-h-[85vh] overflow-y-auto rounded-3xl border border-teal-500/30 bg-slate-900/95 p-6 shadow-2xl space-y-6" style="touch-action: pan-y !important; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;">
+    <div id="advice-scroll" class="relative w-[95%] max-w-[480px] max-h-[85vh] overflow-y-auto rounded-3xl border border-amber-300/40 bg-slate-900/95 p-6 shadow-2xl space-y-6" style="touch-action: pan-y !important; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;">
 
       <div class="flex flex-col items-center gap-3 text-center mb-2">
         <div class="w-14 h-14 bg-teal-900/50 rounded-full flex items-center justify-center border border-teal-500/50 shadow-[0_0_15px_rgba(20,184,166,0.3)]">

@@ -1,5 +1,5 @@
-/**
- * Bubble — فقاعة مائية زبرجدية (Teal/Cyan) برّاقة لذكر: "سُبْحَانَ الله".
+﻿/**
+ * Bubble â€” ظپظ‚ط§ط¹ط© ظ…ط§ط¦ظٹط© ط²ط¨ط±ط¬ط¯ظٹط© (Teal/Cyan) ط¨ط±ظ‘ط§ظ‚ط© ظ„ط°ظƒط±: "ط³ظڈط¨ظ’ط­ظژط§ظ†ظژ ط§ظ„ظ„ظ‡".
  */
 import Phaser from 'phaser'
 import { FloatingObject, type FloatingObjectOptions } from './FloatingObject'
@@ -8,7 +8,7 @@ export default class Bubble extends FloatingObject {
   constructor(scene: Phaser.Scene, x: number, y: number, override?: Partial<FloatingObjectOptions>) {
     super(scene, x, y, {
       dhikrId: 'subhanallah',
-      dhikrName: 'سُبْحَانَ الله',
+      dhikrName: 'ط³ظڈط¨ظ’ط­ظژط§ظ†ظژ ط§ظ„ظ„ظ‡',
       dhikrTarget: 33,
       speedBase: 78,
       speedMultiplier: 1,
@@ -21,29 +21,29 @@ export default class Bubble extends FloatingObject {
   }
 
   protected getGlowColor(): number {
-    return 0x18ffff // فسفوري سماوي متوهج
+    return 0x7dd3fc // ظپط³ظپظˆط±ظٹ ط³ظ…ط§ظˆظٹ ظ…طھظˆظ‡ط¬
   }
 
   protected buildBody(): void {
     const g = this.scene.add.graphics()
 
-    // هالة خارجية ناعمة
+    // ظ‡ط§ظ„ط© ط®ط§ط±ط¬ظٹط© ظ†ط§ط¹ظ…ط©
     g.fillStyle(0x00ffff, 0.4)
     g.fillCircle(0, 0, 48)
 
-    // جسم الفقاعة بألوان زاهية جداً
+    // ط¬ط³ظ… ط§ظ„ظپظ‚ط§ط¹ط© ط¨ط£ظ„ظˆط§ظ† ط²ط§ظ‡ظٹط© ط¬ط¯ط§ظ‹
     g.fillStyle(0x06b6d4, 0.95)
     g.fillCircle(0, 0, 32)
 
-    // حد خارجي سميك وواضح (4px الأبيض الناصع كما طُلب)
+    // ط­ط¯ ط®ط§ط±ط¬ظٹ ط³ظ…ظٹظƒ ظˆظˆط§ط¶ط­ (4px ط§ظ„ط£ط¨ظٹط¶ ط§ظ„ظ†ط§طµط¹ ظƒظ…ط§ ط·ظڈظ„ط¨)
     g.lineStyle(4, 0xffffff, 1)
     g.strokeCircle(0, 0, 32)
 
-    // قلب مضيء داخلي
+    // ظ‚ظ„ط¨ ظ…ط¶ظٹط، ط¯ط§ط®ظ„ظٹ
     g.fillStyle(0x67e8f9, 0.5)
     g.fillCircle(0, 0, 18)
 
-    // لمعة
+    // ظ„ظ…ط¹ط©
     g.fillStyle(0xffffff, 0.9)
     g.fillEllipse(-9, -13, 12, 8)
     g.fillStyle(0xffffff, 0.6)
@@ -51,7 +51,7 @@ export default class Bubble extends FloatingObject {
 
     this.add(g)
 
-    // بريق متلألئ (نجمة تلمع بلا توقف)
+    // ط¨ط±ظٹظ‚ ظ…طھظ„ط£ظ„ط¦ (ظ†ط¬ظ…ط© طھظ„ظ…ط¹ ط¨ظ„ط§ طھظˆظ‚ظپ)
     const spark = this.scene.add.graphics()
     this.scene.tweens.add({
       targets: spark,

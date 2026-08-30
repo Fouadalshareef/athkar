@@ -18,6 +18,22 @@ export default class BootScene extends Phaser.Scene {
     this.load.image('dhikr-art-la-hawla', 'assets/game/bubbles/dhikr-la-hawla.png')
     this.load.image('dhikr-art-subhanallah-wa-bihamdih', 'assets/game/bubbles/dhikr-subhanallah-wa-bihamdih.png')
     this.load.image('dhikr-art-salawat', 'assets/game/bubbles/dhikr-salawat.png')
+    // أصول البيئة الليلية (قمر + فانوس) وأيقونات HUD الموحّدة
+    this.load.image('env-moon', 'assets/game/environment/moon.png')
+    this.load.image('env-lantern', 'assets/game/environment/lantern.png')
+    this.load.image('icon-gear', 'assets/game/ui/icon-gear.png')
+    this.load.image('icon-sliders', 'assets/game/ui/icon-sliders.png')
+    this.load.image('icon-leaf', 'assets/game/ui/icon-leaf.png')
+    this.load.image('icon-quran', 'assets/game/ui/icon-quran.png')
+    this.load.image('icon-pause', 'assets/game/ui/icon-pause.png')
+    this.load.image('icon-play', 'assets/game/ui/icon-play.png')
+    // أصول الحديقة الليلية (شجرة/شجيرة/زهور/نافورة/عشب)
+    this.load.image('garden-tree', 'assets/game/vegetation/garden-tree.png')
+    this.load.image('garden-bush', 'assets/game/vegetation/garden-bush.png')
+    this.load.image('garden-flower-red', 'assets/game/vegetation/garden-flower-red.png')
+    this.load.image('garden-flower-yellow', 'assets/game/vegetation/garden-flower-yellow.png')
+    this.load.image('garden-fountain', 'assets/game/vegetation/garden-fountain.png')
+    this.load.image('garden-grass-tuft', 'assets/game/vegetation/garden-grass-tuft.png')
   }
 
   create(): void {
