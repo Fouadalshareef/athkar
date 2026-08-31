@@ -149,15 +149,14 @@ export default class MainScene extends Phaser.Scene {
     const topY = Math.round(Math.max(62, height * 0.072))
     const gap = Math.round(Math.max(70, Math.min(88, height * 0.1)))
 
-    // عائلة أزرار موحّدة: جسم كحلي + إطار ذهبي + أيقونة كريمية (نفس التصميم للجميع)
-    this.buildSideButton(marginX, topY, 'gear', () => {
+    this.buildImageButton(marginX, topY, 'btn_settings', () => {
       window.dispatchEvent(new CustomEvent('open-dashboard'))
     })
-    this.buildSideButton(marginX, topY + gap, 'sliders', () => this.openModePanel())
-    this.buildSideButton(marginX, topY + gap * 2, 'leaf', () => {
+    this.buildImageButton(marginX, topY + gap, 'btn_theme', () => this.openModePanel())
+    this.buildImageButton(marginX, topY + gap * 2, 'btn_farm', () => {
       window.dispatchEvent(new CustomEvent('open-garden'))
     })
-    this.buildSideButton(marginX, topY + gap * 3, 'quran', () => {
+    this.buildImageButton(marginX, topY + gap * 3, 'btn_quran', () => {
       window.dispatchEvent(new CustomEvent('open-quran'))
     })
 
@@ -165,6 +164,19 @@ export default class MainScene extends Phaser.Scene {
     this.buildPauseButton(topY)
     this.buildSessionCounter(topY)
     this.buildComboCounter()
+  }
+
+  /** زر HUD بصورة جاهزة مع تفاعل ضغط موحّد. */
+  private buildImageButton(x: number, y: number, texture: string, onTap: () => void): Phaser.GameObjects.Image {
+    const btn = this.add.image(x, y, texture).setDepth(2000).setDisplaySize(64, 64).setInteractive({ useHandCursor: true })
+    btn.on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => {
+      this.tweens.add({ targets: btn, scaleX: 0.88, scaleY: 0.88, duration: 70, ease: 'Quad.easeOut' })
+      onTap()
+    })
+    const release = () => this.tweens.add({ targets: btn, scaleX: 1, scaleY: 1, duration: 110, ease: 'Back.easeOut' })
+    btn.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, release)
+    btn.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, release)
+    return btn
   }
 
   /**
@@ -230,7 +242,7 @@ export default class MainScene extends Phaser.Scene {
   private buildRoundButton(
     x: number,
     y: number,
-    icon: 'gear' | 'sliders' | 'pause' | 'play' | 'leaf' | 'quran',
+    icon: string,
     color: number,
     colorHi: number,
     onTap: () => void,
@@ -284,22 +296,10 @@ export default class MainScene extends Phaser.Scene {
     return btn
   }
 
-  /** أقصى اليسار العلوي: كل الأزرار من نفس العائلة البصرية (كحلي + ذهبي). */
-  private buildSideButton(
-    x: number,
-    y: number,
-    icon: 'gear' | 'sliders' | 'leaf' | 'quran',
-    onTap: () => void,
-  ): void {
-    this.buildRoundButton(x, y, icon, 0x14295c, 0xfff6e0, onTap)
-  }
-
-  /** زر إيقاف/استئناف مؤقت أعلى اليمين (أيقونة PNG ضمن نفس العائلة). */
+  /** زر إيقاف/استئناف مؤقت أعلى اليمين. */
   private buildPauseButton(topY: number): void {
     const x = this.scale.width - Math.round(Math.max(46, Math.min(64, this.scale.width * 0.14)))
-    const btn = this.buildRoundButton(x, topY, 'pause', 0x14295c, 0xfff6e0, () => this.togglePause())
-    // العنصر الثاني في الحاوية هو صورة الأيقونة — يُبدَّل نسيجها عند التبديل
-    this.pauseIconG = btn.list[1] as Phaser.GameObjects.Image
+    this.pauseIconG = this.buildImageButton(x, topY, 'btn_pause', () => this.togglePause())
   }
 
   /** عداد الجلسة الحالية أسفل زر الإيقاف — مُدمج وأنيق مع إطار ذهبي رفيع. */
@@ -379,7 +379,7 @@ export default class MainScene extends Phaser.Scene {
   private togglePause(): void {
     this.paused = !this.paused
     this.data.set('paused', this.paused)
-    this.pauseIconG.setTexture(this.paused ? 'icon-play' : 'icon-pause')
+    this.pauseIconG.setTexture(this.paused ? 'btn_play' : 'btn_pause')
   }
 
   // ------------------------------------------------------------------

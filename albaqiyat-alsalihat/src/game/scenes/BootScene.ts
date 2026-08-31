@@ -27,6 +27,13 @@ export default class BootScene extends Phaser.Scene {
     this.load.image('icon-quran', 'assets/game/ui/icon-quran.png')
     this.load.image('icon-pause', 'assets/game/ui/icon-pause.png')
     this.load.image('icon-play', 'assets/game/ui/icon-play.png')
+    // أزرار HUD المخصصة
+    this.load.image('btn_settings', new URL('../buttons/1.jfif', import.meta.url).href)
+    this.load.image('btn_theme', new URL('../buttons/2.jfif', import.meta.url).href)
+    this.load.image('btn_farm', new URL('../buttons/3.jfif', import.meta.url).href)
+    this.load.image('btn_quran', new URL('../buttons/4.jfif', import.meta.url).href)
+    this.load.image('btn_pause', new URL('../buttons/5.jfif', import.meta.url).href)
+    this.load.image('btn_play', new URL('../buttons/6.jfif', import.meta.url).href)
     // أصول الحديقة الليلية (شجرة/شجيرة/زهور/نافورة/عشب)
     this.load.image('garden-tree', 'assets/game/vegetation/garden-tree.png')
     this.load.image('garden-bush', 'assets/game/vegetation/garden-bush.png')
@@ -34,6 +41,37 @@ export default class BootScene extends Phaser.Scene {
     this.load.image('garden-flower-yellow', 'assets/game/vegetation/garden-flower-yellow.png')
     this.load.image('garden-fountain', 'assets/game/vegetation/garden-fountain.png')
     this.load.image('garden-grass-tuft', 'assets/game/vegetation/garden-grass-tuft.png')
+    // أصول مقطوعة آلياً بأداة `scripts/cut_assets.py` (شفافة، عالية الجودة).
+    // متاحة تحت المفاتيح `cut_*` لاستخدامها مباشرة داخل اللعبة عند الحاجة.
+    const cutAssets: Array<[string, string]> = [
+      ['cut_item_1', 'cut_item_1.png'],
+      ['cut_item_2', 'cut_item_2.png'],
+      ['cut_item_3', 'cut_item_3.png'],
+      ['cut_item_4', 'cut_item_4.png'],
+      ['cut_item_5', 'cut_item_5.png'],
+      ['cut_item_6', 'cut_item_6.png'],
+      ['cut_item_7', 'cut_item_7.png'],
+      ['cut_item_8', 'cut_item_8.png'],
+      ['cut_item_9', 'cut_item_9.png'],
+      ['cut_item_10', 'cut_item_10.png'],
+      ['cut_btn_1', 'cut_btn_1.png'],
+      ['cut_btn_2', 'cut_btn_2.png'],
+      ['cut_btn_3', 'cut_btn_3.png'],
+      ['cut_btn_4', 'cut_btn_4.png'],
+      ['cut_btn_5', 'cut_btn_5.png'],
+      ['cut_btn_6', 'cut_btn_6.png'],
+      ['cut_btn_7', 'cut_btn_7.png'],
+      ['cut_btn_8', 'cut_btn_8.png'],
+      ['cut_btn_9', 'cut_btn_9.png'],
+      ['cut_btn_10', 'cut_btn_10.png'],
+      ['cut_btn_11', 'cut_btn_11.png'],
+      ['cut_btn_12', 'cut_btn_12.png'],
+      ['cut_bg_1', 'cut_bg_1.png'],
+      ['cut_bg_2', 'cut_bg_2.png'],
+    ]
+    for (const [key, file] of cutAssets) {
+      this.load.image(key, 'assets/images/cut_assets/' + file)
+    }
   }
 
   create(): void {
